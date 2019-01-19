@@ -74,5 +74,5 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <LinkerToolPath></LinkerToolPath>
   </PropertyGroup>
 
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Platform.props"/>
+  <!--<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Platform.props"/>-->
 </Project>

@@ -12,13 +12,13 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_PlatformFolder>$(MSBuildThisFileDirectory)</_PlatformFolder>
+    <_PlatformFolder>$(LinuxCommonTargetsPath)\Yocto</_PlatformFolder>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)ImportBefore\*.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportBefore')" />
 
   <Import Project="$(MSBuildThisFileDirectory)\YoctoSDKConfig.props"/>
-  <Import Project="$(MSBuildThisFileDirectory)\Yocto.props"/>
+  <Import Project="$(_PlatformFolder)\Yocto.props"/>
   
   <PropertyGroup>
     <PlatformTriplet>$(YoctoSDKPlatformTriplet)</PlatformTriplet>
