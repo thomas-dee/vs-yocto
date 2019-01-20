@@ -48,9 +48,9 @@
                       F1Keyword="VC.Project.VCDirectories.ExcludePath"
                       Category="VC++" Separator=";" Subtype="folder"/>
 											
-  <StringListProperty Name="YoctoSDKRootFolder" DisplayName="Yocto SDK Root Folder"
+  <StringProperty     Name="YoctoSDKRoot" DisplayName="Yocto SDK Root Folder"
                       Description="Base folder for all Yocto SDKs."
-                      Category="Toolchains" Separator=";" Subtype="folder" />
+                      Category="Toolchains" Subtype="folder" Visible="false"/>
 											
   <StringListProperty Name="StdIncludeFolder" DisplayName="STL Headers"
                       Description="Path of standard library headers."

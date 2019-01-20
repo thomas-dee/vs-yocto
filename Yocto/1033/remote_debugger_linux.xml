@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright, Microsoft Corporation, All rights reserved.-->
+<Rule 
+  Name="LinuxDebugger"
+  DisplayName="Remote GDB Debugger"
+  PageTemplate="debugger"
+  Order="100"
+  Description="Debugger options"
+  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General" Description="General" />
+    <Category Name="TargetSettings" DisplayName="Target Settings" Description="Target Settings" />
+  </Rule.Categories>
+
+  <Rule.Metadata>
+    <sys:Guid x:Key="DebugTargetTypeCommandGuid">FEEA6E9D-77D8-423F-9EDE-3970CBB76125</sys:Guid>
+    <sys:UInt32 x:Key="DebugTargetTypeCommandId">0x400</sys:UInt32>
+    <sys:String x:Key="DebugTargetDropdownEnum">RemoteDebugTarget</sys:String>
+  </Rule.Metadata>
+  <Rule.DataSource>
+    <DataSource Persistence="UserFile" />
+  </Rule.DataSource>
+
+  <DynamicEnumProperty Name="RemoteDebugTarget" DisplayName="Remote Debugging Machine"
+              Description="The target machine or device to use for remote build, deploy and debug."
+              F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+              EnumProvider="RemoteDebugTargets"
+              Visible="false" Category="TargetSettings">
+  </DynamicEnumProperty>
+  <DynamicEnumProperty Name="RemoteTarget" DisplayName="Remote Debugging Machine"
+                  Description="The target machine or device to use for remote build, deploy and debug."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Default="" EnumProvider="RemoteTargets" Category="TargetSettings">
+    <DynamicEnumProperty.DataSource>
+      <DataSource Persistence="UserFile" Label="" />
+    </DynamicEnumProperty.DataSource>
+  </DynamicEnumProperty>
+  <StringProperty Name="RemoteRootDir" DisplayName="Remote Debugging Root Directory"
+                  Description="Specifies a path to a directory on the remote machine or device."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Default="~/projects" Category="TargetSettings">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Configuration" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  <StringProperty Name="RemoteProjectDir" DisplayName="Remote Debugging Project Directory"
+                  Description="Specifies a path to a directory on the remote machine or device for the project."
+                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
+                  Default="" Category="TargetSettings">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+
+
+  <EnumProperty Name="DebuggerType" 
+                DisplayName="Debugger Type" 
+                F1Keyword="VC.Project.RaspberryDebugger.DebuggerType"
+                Description="Specifies which code type to debug."
+                Visible="false" Category="General">
+    <EnumProperty.Metadata>
+      <NameValuePair Name="IsDebugType" Value="true"/>
+    </EnumProperty.Metadata>
+    <EnumValue Name="NativeOnly" DisplayName="Native Only"/>
+  </EnumProperty>
+
+  <StringProperty Name="PreLaunchCommand" DisplayName="Pre-Launch Command" Description="A command that is run on the shell before the debugging starts and before the debugger is running, and can be used to affect the debugging environment." Category="General" Visible="true" F1Keyword="VC.Project.RaspberryDebugger.LaunchActivity">
+  </StringProperty>
+
+  <StringProperty Name="RemoteDebuggerCommand" DisplayName="Program"
+                  Description="The full path to the program to debug on the remote system. This is a path on the remote system. If left empty or unchanged it defaults to the current project output."
+                  F1Keyword="VC.Project.IVCLocalDebugPageObject.CommandArguments" Category="General">
+  </StringProperty>
+  <StringProperty Name="RemoteDebuggerCommandArguments" DisplayName="Program Arguments"
+                  Description="The command line arguments to pass to the program being debugged."
+                  F1Keyword="VC.Project.IVCLocalDebugPageObject.CommandArguments" Category="General">
+  </StringProperty>
+  <StringProperty Name="RemoteDebuggerWorkingDirectory" DisplayName="Working Directory"
+                Description="The remote application's working directory. By default, the user home directory."
+                F1Keyword="VC.Project.IVCLocalDebugPageObject.WorkingDirectory" Category="General"/>
+
+  <StringListProperty Name="AdditionalDebuggerCommands"
+                  DisplayName="Additional Debugger Commands"
+                  Description="Additional gdb commands for the debugger to run before starting debugging."
+                  F1Keyword="VC.Project.RaspberryDebugger.LaunchActivity"
+                  Visible="true" Category="General">
+  </StringListProperty>
+
+  <StringProperty Name="LocalPortNumber" DisplayName="Debugger Port Number" Description="The port number for debugger communication with the remote debugger. The port must not be in use locally. This value must be positive in between 1 and 65535. If not supplied a free port number will be used." Category="General" Visible="true" F1Keyword="VC.Project.RaspberryDebugger.LaunchActivity">
+  </StringProperty>
+  <StringProperty Name="RemotePortNumber" DisplayName="Remote Debugger Port Number" Description="The port number on which the remote debugger server (gdbserver) is listening on on the remote system. The port must not be in use on the remote system. This value must be positive in between 1 and 65535. If not supplied a free port number starting from 4444 will be used." Category="General" Visible="true" F1Keyword="VC.Project.RaspberryDebugger.LaunchActivity">
+  </StringProperty>
+
+  <EnumProperty Name="RemoteDebuggingMode" 
+                DisplayName="Debugging Mode" 
+                F1Keyword="VC.Project.RaspberryDebugger.DebuggerType"
+                Description="Specifies how the debugger interfaces with gdb. In the gdb mode the debugger drives gdb over the shell on the remote system. In the gdbserver mode, gdb is running locally and connects to gdbserver running remotely."
+                Category="General">
+    <EnumValue Name="gdbserver" DisplayName="gdbserver"/>
+    <EnumValue Name="gdb" DisplayName="gdb"/>
+  </EnumProperty>
+
+  <StringListProperty Name="AdditionalSymbolSearchPaths"
+                  DisplayName="Additional Symbol Search Paths"
+                  Description="Additional search path for debug symbols (solib-search-path)."
+                  F1Keyword="VC.Project.RaspberryDebugger.LaunchActivity"
+                  Subtype="folder"
+                  Visible="true" Category="General">
+  </StringListProperty>
+
+  <BoolProperty Name="DebugChildProcesses" DisplayName="Debug Child Processes" Category="General"
+                Description="Specifies whether to enable debugging of child processes."
+                F1Keyword="VC.Project.LinuxDebugger.DebugChildProcesses"/>
+
+  <StringProperty Name="TargetPath" Visible="false"  Category="General"/>
+
+  <StringProperty Name="GDBPath" Visible="false"  Category="General"/>
+  <StringProperty Name="GdbShellExecProgram" Visible="false"  Category="General"/>
+  <StringProperty Name="GdbShellExecProgramFlags" Visible="false"  Category="General"/>
+  <StringProperty Name="RemoteTargetPath" Visible="false"  Category="General"/>
+
+  <BoolProperty Name="EnablePrettyPrinting" DisplayName="Enable Python Pretty Printing" Description="Enable pretty printing of expression values. Only supported in &quot;gdb&quot; debugging mode." Visible="true" F1Keyword="VC.Project.RaspberryDebugger.EnablePrettyPrinting" Category="General">
+  </BoolProperty>
+
+  <StringProperty Name="LinuxNatvisFile" DisplayName="Visualization File" Description="Default native visualization file (.natvis) containing visualization directives for SLT types.  Other .natvis files that belong to the current solution will be loaded automatically." Visible="true" F1Keyword="VC.Project.RaspberryDebugger.LinuxNatvisFile" Category="General">
+  </StringProperty>
+
+  <StringListProperty Name="SourceMap"
+                  DisplayName="Additional Sources File Path Map"
+                  Description="Additional path equivalences for the debugger to use to map Windows source file names to Linux source file names. Format is &quot;&lt;windows-path&gt;=&lt;linux-path&gt;;...&quot;. A source file name found under the Windows path will be referenced as if is has been found in the same relative position under the Linux path. Files found in the local project do not require additional mapping."
+                  F1Keyword="VC.Project.RaspberryDebugger.SourceMap"
+                  Visible="true" Category="General">
+  </StringListProperty>
+</Rule>

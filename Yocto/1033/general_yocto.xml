@@ -74,7 +74,7 @@
   <DynamicEnumProperty Name="RemoteTarget" DisplayName="Remote Build Machine"
                   Description="The target machine or device to use for remote build, deploy and debug."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="" EnumProvider="RemoteTargets">
+                  Category="General" Default="" EnumProvider="RemoteTargets" Visible="false">
     <DynamicEnumProperty.DataSource>
       <DataSource Persistence="UserFile" Label="" />
     </DynamicEnumProperty.DataSource>
@@ -82,7 +82,7 @@
   <StringProperty Name="RemoteRootDir" DisplayName="Remote Build Root Directory"
                   Description="Specifies a path to a directory on the remote machine or device."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="">
+                  Category="General" Default="" Visible="false">
     <StringProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="Configuration" />
     </StringProperty.DataSource>
@@ -90,7 +90,7 @@
   <StringProperty Name="RemoteProjectDir" DisplayName="Remote Build Project Directory"
                   Description="Specifies a path to a directory on the remote machine or device for the project."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="">
+                  Category="General" Default="" Visible="false">
     <StringProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="" />
     </StringProperty.DataSource>
@@ -162,7 +162,7 @@
     </StringProperty.DataSource>
   </StringProperty>
 
-  <StringProperty Name="RemoteTargetArchitecture" Visible="true">
+  <StringProperty Name="RemoteTargetArchitecture" Visible="false">
     <StringProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="" HasConfigurationCondition="false" />
     </StringProperty.DataSource>
