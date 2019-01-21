@@ -4,6 +4,9 @@
 :: Note: This is currently only tested for ARM64.
 ::       If you have any issues: https://github.com/thomas-dee/vs-yocto/issues
 set YoctoSDKRoot=%1
+if "%YoctoSDKRoot%" == "" (
+    if exist "%~dp0relocate_sdk.py" set YoctoSDKRoot=%~dp0
+)
 
 :: check for admin rights
 net session >nul 2>&1

@@ -183,7 +183,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 			<Verbose>false</Verbose>
 			<Pedantic>false</Pedantic>
 			<WarningLevel>Default</WarningLevel>
-			<DebugInformationFormat>GGDB</DebugInformationFormat>
+			<DebugInformationFormat>GDB</DebugInformationFormat>
 			
 			<WarnReorder>Disable</WarnReorder>
 			<WarnSwitch>Disable</WarnSwitch>
