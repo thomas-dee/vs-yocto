@@ -59,19 +59,19 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   <!-- Provide default values if necessary -->
   <PropertyGroup>
     <RemoteProjectDir Condition="'$(RemoteProjectDir)' == ''">$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
-    <RemoteOutDir Condition="'$(RemoteOutDir)' == ''">$(RemoteProjectDir)/bin/$(Platform)/$(Configuration)/</RemoteOutDir>
+    <RemoteOutDir Condition="'$(RemoteOutDir)' == ''">$(RemoteProjectDir)/bin/$(Platform)/$(Configuration)</RemoteOutDir>
 
     <TargetRuntime>Native</TargetRuntime>
     <TargetExt />
     <ProjectName Condition="'$(ProjectName)' == ''">$(MSBuildProjectName)</ProjectName>
 
     <ExtensionsToDeleteOnClean Condition="'$(ExtensionsToDeleteOnClean)' == ''">*.d;*.tlog;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
-    <PreBuildEventUseInBuild Condition="'$(PreBuildEventUseInBuild)' == ''">true</PreBuildEventUseInBuild>
-    <PreLinkEventUseInBuild Condition="'$(PreLinkEventUseInBuild)' == ''">true</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(PostBuildEventUseInBuild)' == ''">true</PostBuildEventUseInBuild>
-    <RemotePreBuildEventUseInBuild Condition="'$(RemotePreBuildEventUseInBuild)' == ''">true</RemotePreBuildEventUseInBuild>
-    <RemotePreLinkEventUseInBuild Condition="'$(RemotePreLinkEventUseInBuild)' == ''">true</RemotePreLinkEventUseInBuild>
-    <RemotePostBuildEventUseInBuild Condition="'$(RemotePostBuildEventUseInBuild)' == ''">true</RemotePostBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(PreBuildEventUseInBuild)' == ''">false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild Condition="'$(PreLinkEventUseInBuild)' == ''">false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(PostBuildEventUseInBuild)' == ''">false</PostBuildEventUseInBuild>
+    <RemotePreBuildEventUseInBuild Condition="'$(RemotePreBuildEventUseInBuild)' == ''">false</RemotePreBuildEventUseInBuild>
+    <RemotePreLinkEventUseInBuild Condition="'$(RemotePreLinkEventUseInBuild)' == ''">false</RemotePreLinkEventUseInBuild>
+    <RemotePostBuildEventUseInBuild Condition="'$(RemotePostBuildEventUseInBuild)' == ''">false</RemotePostBuildEventUseInBuild>
 
     <ConfigurationType Condition="'$(ConfigurationType)' == ''">Application</ConfigurationType>
 
@@ -81,11 +81,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <RemoteArCommmandTimeout Condition="'$(RemoteArCommmandTimeout)' == ''">3600000</RemoteArCommmandTimeout>
 
     <RemoteCompileLocalCopyObjectFiles>false</RemoteCompileLocalCopyObjectFiles>
-    <RemoteLinkLocalCopyOutput>true</RemoteLinkLocalCopyOutput>
+    <RemoteLinkLocalCopyOutput>false</RemoteLinkLocalCopyOutput>
 
     <DebugChildProcesses Condition="'$(DebugChildProcesses)' == ''">false</DebugChildProcesses>
 
-    <ValidateArchitecture Condition="'$(ValidateArchitecture)' == ''">True</ValidateArchitecture>
+    <ValidateArchitecture Condition="'$(ValidateArchitecture)' == ''">false</ValidateArchitecture>
   </PropertyGroup>
 
   <ItemGroup>
@@ -193,7 +193,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       <ClangMode>true</ClangMode>
       <StrictAliasing>false</StrictAliasing>
       <ProgramDatabaseFileName>$(IntDir)</ProgramDatabaseFileName>
-      <ExceptionHandling>Enabled</ExceptionHandling>
+      <ExceptionHandling>Disabled</ExceptionHandling>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <PositionIndependentCode>true</PositionIndependentCode>
 			
@@ -255,7 +255,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
        ******************************************************************************************* -->
   <PropertyGroup>
     <StripOptions>--strip-unneeded $(StripOptions)</StripOptions>
-    <PackageDebugSymbols>false</PackageDebugSymbols>
   </PropertyGroup>
 
   <!-- *******************************************************************************************

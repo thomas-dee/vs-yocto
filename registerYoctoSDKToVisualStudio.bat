@@ -75,11 +75,12 @@ if "%VCYoctoPlatform%" == "" (
 )
 
 ::-----------------------------------------------------------------------------
-set VCYoctoPlatformPath=%VCInstallDir%\Common7\IDE\VC\VCTargets\Application Type\Linux\1.0\Yocto
-set VCYoctoPlatformToolsetPath=%VCInstallDir%\Common7\IDE\VC\VCTargets\Application Type\Linux\1.0\Platforms\%VCYoctoPlatform%\PlatformToolsets\%YoctoSDKPlatformToolset%
+set VCLinuxPlatformPath=%VCInstallDir%\Common7\IDE\VC\VCTargets\Application Type\Linux
+set VCYoctoPlatformPath=%VCLinuxPlatformPath%\1.0\Yocto
+set VCYoctoPlatformToolsetPath=%VCLinuxPlatformPath%\1.0\Platforms\%VCYoctoPlatform%\PlatformToolsets\%YoctoSDKPlatformToolset%
 
 :: Is there already any vs-yocto.Build.CPPTasks.GCC.dll installation
-if not exist "%VCYoctoPlatformPath%\vs-yocto.Build.CPPTasks.GCC.dll" call:createYoctoPlatform
+if not exist "%VCLinuxPlatformPath%\vs-yocto.Build.CPPTasks.GCC.dll" call:createYoctoPlatform
 
 
 set YoctoSDKConfigFile=%VCYoctoPlatformToolsetPath%\YoctoSDKConfig.props
@@ -175,7 +176,7 @@ msbuild vs-yocto.Build.CPPTasks.GCC.sln /p:Configuration="Release" /p:Platform="
 :: Copying stuff
 mkdir "%VCYoctoPlatformPath%">NUL 2>NUL
 xcopy /S Yocto "%VCYoctoPlatformPath%">NUL 2>NUL
-copy vs-yocto.Build.CPPTasks.GCC\bin\Release\vs-yocto.Build.CPPTasks.GCC.dll "%VCYoctoPlatformPath%\vs-yocto.Build.CPPTasks.GCC.dll">NUL 2>NUL
+copy vs-yocto.Build.CPPTasks.GCC\bin\Release\vs-yocto.Build.CPPTasks.GCC.dll "%VCLinuxPlatformPath%\vs-yocto.Build.CPPTasks.GCC.dll">NUL 2>NUL
 
 cd /d %CurrentDir%>NUL 2>NUL
 if exist "%TEMP%\.YoctoSdkPlatformBuilder" rmdir /S /Q "%TEMP%\.YoctoSdkPlatformBuilder"

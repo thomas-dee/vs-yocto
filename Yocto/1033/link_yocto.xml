@@ -6,7 +6,6 @@
     <Category Name="General" DisplayName="General" />
     <Category Name="Input" DisplayName="Input" />
     <Category Name="Debugging" DisplayName="Debugging" />
-    <Category Name="Advanced" DisplayName="Advanced" />
     <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
     <Category Name="Command Line" DisplayName="Command Line" Subtype="CommandLine" />
   </Rule.Categories>
@@ -69,10 +68,9 @@
     <EnumValue Name="OmitAllSymbolInformation" Switch="--strip-all" DisplayName="Omit All Symbol Information">
     </EnumValue>
   </EnumProperty>
-  <BoolProperty Name="PackageDebugSymbols" DisplayName="Package Debugger Symbol Information" Description="Strip the Debugger Symbols Information before Packaging.  A copy of the original binary will be used for debugging." Category="Debugging" F1Keyword="VC.Project.VCLinkerTool.OmitDebuggerSymbolInformation" Visible="False"/>
+  <BoolProperty Name="PackageDebugSymbols" DisplayName="Package Debugger Symbol Information" Description="Strip the Debugger Symbols Information before Packaging.  A copy of the original binary will be used for debugging." Category="Debugging" F1Keyword="VC.Project.VCLinkerTool.OmitDebuggerSymbolInformation" Visible="false"/>
   <StringProperty Name="GenerateMapFile" DisplayName="Map File Name" Description="The Map option tells the linker to create a map file with the user specified name." Category="Debugging" Switch="Map=" F1Keyword="VC.Project.VCLinkerTool.GenerateMapFile">
   </StringProperty>
-	<!-- Advanced -->
   
   <StringProperty Name="AdditionalOptions" DisplayName="Additional Options" Description="Additional Options." Category="Command Line" F1Keyword="vc.project.AdditionalOptionsPage">
   </StringProperty>

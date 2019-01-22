@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="liblinux">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Application Type\Linux\1.0\liblinux.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,6 +48,9 @@
   <ItemGroup>
     <Compile Include="CPPTasks\MingRC.cs" />
     <Compile Include="CPPTasks\YoctoMingLink.cs" />
+    <Compile Include="Linux\Tasks\ResolveRemoteTarget.cs" />
+    <Compile Include="Linux\Shared\RemoteTarget.cs" />
+    <Compile Include="Linux\Shared\RemoteTargetUtils.cs" />
     <Compile Include="Shared\AssemblyResources.cs" />
     <Compile Include="Shared\ErrorUtilities.cs" />
     <Compile Include="Shared\ExceptionHandling.cs" />

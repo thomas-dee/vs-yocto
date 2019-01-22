@@ -3,14 +3,14 @@
 
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ValidateValidArchitecture" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.WriteRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
-  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
+  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteDir" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.Execute" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.RemoteClean" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
 
-  <UsingTask TaskName="MingCompile" AssemblyFile="$(MSBuildthisFileDirectory)vs-yocto.Build.CPPTasks.GCC.dll"/>
-  <UsingTask TaskName="YoctoMingLink" AssemblyFile="$(MSBuildthisFileDirectory)vs-yocto.Build.CPPTasks.GCC.dll"/>
-  <UsingTask TaskName="Archive" AssemblyFile="$(MSBuildthisFileDirectory)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="MingCompile" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="YoctoMingLink" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="Archive" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
 
   <!--<UsingTask TaskName="SetEnv" AssemblyFile="$(VCTargetsPath)Microsoft.Build.CppTasks.Common.dll"/>-->
 
@@ -67,15 +67,16 @@
   <Target Name="_ResolveRemoteTarget">
     <ResolveRemoteTarget 
       RemoteTarget="$(RemoteTarget)"
-      DesignTimeBuild="$(DesignTimeBuild)">
+      DesignTimeBuild="true">
       <Output TaskParameter="ResolvedRemoteTarget" PropertyName="ResolvedRemoteTarget"/>
       <Output TaskParameter="ResolvedRemoteTargetId" PropertyName="ResolvedRemoteTargetId"/>
       <Output TaskParameter="RemoteTargetArchitecture" PropertyName="RemoteTargetArchitecture"/>
+      <Output TaskParameter="ResolvedRemoteUserName" PropertyName="ResolvedRemoteUserName"/>
     </ResolveRemoteTarget>
   </Target>
 
   <Target Name="ResolveRemoteDir" DependsOnTargets="_PrepareUpToDateChecks">
-    <ResolveRemoteDir Condition="'%(RemotePreBuildEvent.Command)' != '' or '%(RemotePreBuildEvent.AdditionalSourcesToCopyMapping)' != '' or '%(PreBuildEvent.AdditionalSourcesToCopyMapping)' != ''"
+    <ResolveRemoteDir
       RemoteProjectDir="$(RemoteProjectDir)"
       RemoteTarget="$(ResolvedRemoteTarget)"
       ProjectDir="$(ProjectDir)"
@@ -329,14 +330,14 @@
          ******************************************************************************************* -->
 
     <!-- Strip symbols to reduce size for remote debugging -->
-    <Exec Condition="'$(PackageDebugSymbols)' != 'true' and '$(LinkSkippedExecution)' != 'true' and '$(TargetPath)' != $([System.IO.Path]::GetFullPath('$(LinkOutputFile)'))" Command="$(StripToolExe) $(StripOptions) -o &quot;$(TargetPath)&quot; &quot;$(LinkOutputFile)&quot;" />
+    <Exec Condition="'%(Link.PackageDebugSymbols)' != 'true' and '$(LinkSkippedExecution)' != 'true' and '$(TargetPath)' != $([System.IO.Path]::GetFullPath('$(LinkOutputFile)'))" Command="$(StripToolExe) $(StripOptions) -o &quot;$(TargetPath)&quot; &quot;$(LinkOutputFile)&quot;" />
 
     <!-- If not strip, then copy to output instead. -->
-    <Copy Condition="'$(PackageDebugSymbols)' == 'true' and '$(LinkSkippedExecution)' != 'true'" SourceFiles="$(LinkOutputFile)" DestinationFolder="$(TargetDir)" />
+    <Copy Condition="'%(Link.PackageDebugSymbols)' == 'true' and '$(LinkSkippedExecution)' != 'true'" SourceFiles="$(LinkOutputFile)" DestinationFolder="$(TargetDir)" />
 
 
-    <Message Text="$(MSBuildProjectFile) -&gt; %(Link.OutputFile)" Importance="High" />
-  </Target>
+    <Message Condition="'$(LinkSkippedExecution)' != 'true'" Text="$(MSBuildProjectFile) -&gt; %(Link.OutputFile)" Importance="High" />
+   </Target>
 
   <!-- Change this target if clanglink needs to clean extra files that is not tracked from the task. -->
   <Target Name="ComputeLinkImportLibraryOutputsForClean" />
@@ -389,6 +390,29 @@
     <Message Text="$(MSBuildProjectFile) -&gt; %(Lib.OutputFile)" Importance="High" />
   </Target>
 	
+  <Target Name="_CopyBinaryToRemote" Condition="'$(RemoteTargetPath)' != '' and '$(LinkSkippedExecution)' != 'true'" DependsOnTargets="_ResolveRemoteTarget">
+    <PropertyGroup>
+      <FixedRemoteTargetPath>$([System.String]::Copy('$(RemoteTargetPath)').Replace('~/','/home/$(ResolvedRemoteUserName)/'))</FixedRemoteTargetPath>
+      <FixedRemoteProjectDir>$([System.String]::Copy('$(RemoteProjectDir)').Replace('~/','/home/$(ResolvedRemoteUserName)/'))</FixedRemoteProjectDir>
+    </PropertyGroup>
+    <Execute Condition="'$(ResolvedRemoteTarget)' != ''"
+      RemoteTarget="$(ResolvedRemoteTarget)"
+      ProjectDir="$(ProjectDir)"
+      RemoteProjectDir="$(FixedRemoteProjectDir)"
+      IntermediateDir="$(IntDir)"
+      LocalFilesToCopyRemotelyMapping="$(OutDir)$(TargetName)$(TargetExt):=$(FixedRemoteTargetPath)"
+      Timeout="$(RemoteExecuteTimeout)">
+    </Execute>
+    <Execute Condition="'$(ResolvedRemoteTarget)' != ''"
+      RemoteTarget="$(ResolvedRemoteTarget)"
+      ProjectDir="$(ProjectDir)"
+      RemoteProjectDir="$(FixedRemoteProjectDir)"
+      IntermediateDir="$(IntDir)"
+      Command="chmod a+x $(FixedRemoteTargetPath)"
+      Timeout="$(RemoteExecuteTimeout)">
+    </Execute>
+  </Target>
+
   <!-- *******************************************************************************************
         Get ObjectFile Paths
        ******************************************************************************************* -->
@@ -441,6 +465,7 @@
     </BeforeBuildCompileTargets> -->
     <BuildLinkTargets>
       $(BuildLinkTargets);
+      _CopyBinaryToRemote;
       _MarkLastSuccessfulDeployForCleanup;
     </BuildLinkTargets>
   </PropertyGroup>
@@ -460,20 +485,20 @@
   <!-- Property pages -->
   <ItemGroup>
 		<!-- General -->
-    <PropertyPageSchema Include="$(_PlatformFolder)\$(LangID)\general_yocto.xml" >
+    <PropertyPageSchema Include="$(MSBuildthisFileDirectory)$(LangID)\general_yocto.xml" >
       <Context>Project</Context>
     </PropertyPageSchema>
     
 		<!-- Folders -->
-		<PropertyPageSchema Include="$(_PlatformFolder)\$(LangID)\directories_yocto.xml"/>
+		<PropertyPageSchema Include="$(MSBuildthisFileDirectory)$(LangID)\directories_yocto.xml"/>
 		
   </ItemGroup>
 	
 	<!-- Compiler, Linker, Librarian -->
    <ItemGroup Condition="'$(ConfigurationType)' != 'Utility'">
-    <PropertyPageSchema Include="$(_PlatformFolder)$(LangID)\cl_yocto.xml"/>
-    <PropertyPageSchema Include="$(_PlatformFolder)$(LangID)\link_yocto.xml"/>
-    <PropertyPageSchema Include="$(_PlatformFolder)$(LangID)\lib_yocto.xml"/>
+    <PropertyPageSchema Include="$(MSBuildthisFileDirectory)$(LangID)\cl_yocto.xml"/>
+    <PropertyPageSchema Include="$(MSBuildthisFileDirectory)$(LangID)\link_yocto.xml"/>
+    <PropertyPageSchema Include="$(MSBuildthisFileDirectory)$(LangID)\lib_yocto.xml"/>
   </ItemGroup>
 
   <!-- *******************************************************************************************
@@ -502,9 +527,11 @@
     <LastSuccessfulDeploy Condition="'$(PackagePath)' != ''">$(OutDir)\$([System.IO.Path]::GetFileNameWithoutExtension('$(PackagePath)')).lastsuccessfuldeploy</LastSuccessfulDeploy>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(LoadLinuxNative)' == 'true'">
+     <ProjectCapability Include="LinuxNative"/>
+  </ItemGroup>
   <ItemGroup>
-    <ProjectCapability Include="LinuxNative"/>
-    <ProjectCapability Include="LinuxRemoteNative"/>
+     <ProjectCapability Include="LinuxRemoteNative"/>
   </ItemGroup>
 
 </Project>

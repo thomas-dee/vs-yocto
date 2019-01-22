@@ -14,7 +14,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   <PropertyGroup>
     <!--Define platform properties-->
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
 
     <!-- Have to maintain compatibility with VS2010 projects, which might not have toolset defined in the project-->

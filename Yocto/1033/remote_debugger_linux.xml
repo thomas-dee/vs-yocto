@@ -120,9 +120,12 @@
   <StringProperty Name="GDBPath" Visible="false"  Category="General"/>
   <StringProperty Name="GdbShellExecProgram" Visible="false"  Category="General"/>
   <StringProperty Name="GdbShellExecProgramFlags" Visible="false"  Category="General"/>
-  <StringProperty Name="RemoteTargetPath" Visible="false"  Category="General"/>
+  <StringProperty Name="RemoteTargetPath" Visible="true"  Category="General"/>
 
   <BoolProperty Name="EnablePrettyPrinting" DisplayName="Enable Python Pretty Printing" Description="Enable pretty printing of expression values. Only supported in &quot;gdb&quot; debugging mode." Visible="true" F1Keyword="VC.Project.RaspberryDebugger.EnablePrettyPrinting" Category="General">
+  </BoolProperty>
+
+  <BoolProperty Name="LoadLinuxNative" DisplayName="Load Linux Console" Description="Enables support for the Linux Console (requires a resolved target at build time)" Visible="true" Category="General" Default="false">
   </BoolProperty>
 
   <StringProperty Name="LinuxNatvisFile" DisplayName="Visualization File" Description="Default native visualization file (.natvis) containing visualization directives for SLT types.  Other .natvis files that belong to the current solution will be loaded automatically." Visible="true" F1Keyword="VC.Project.RaspberryDebugger.LinuxNatvisFile" Category="General">
