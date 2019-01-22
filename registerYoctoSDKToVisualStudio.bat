@@ -75,9 +75,9 @@ if "%VCYoctoPlatform%" == "" (
 )
 
 ::-----------------------------------------------------------------------------
-set VCLinuxPlatformPath=%VCInstallDir%\Common7\IDE\VC\VCTargets\Application Type\Linux
-set VCYoctoPlatformPath=%VCLinuxPlatformPath%\1.0\Yocto
-set VCYoctoPlatformToolsetPath=%VCLinuxPlatformPath%\1.0\Platforms\%VCYoctoPlatform%\PlatformToolsets\%YoctoSDKPlatformToolset%
+set VCLinuxPlatformPath=%VCInstallDir%\Common7\IDE\VC\VCTargets\Application Type\Linux\1.0
+set VCYoctoPlatformPath=%VCLinuxPlatformPath%\Yocto
+set VCYoctoPlatformToolsetPath=%VCLinuxPlatformPath%\Platforms\%VCYoctoPlatform%\PlatformToolsets\%YoctoSDKPlatformToolset%
 
 :: Is there already any vs-yocto.Build.CPPTasks.GCC.dll installation
 if not exist "%VCLinuxPlatformPath%\vs-yocto.Build.CPPTasks.GCC.dll" call:createYoctoPlatform
