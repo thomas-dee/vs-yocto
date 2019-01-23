@@ -14,3 +14,13 @@ This package allows for registering a *Yocto Windows SDK* (using the meta layer 
 
 This requires C# development workload.
 
+## Debugging
+To be able to debug a "Yocto Linux" target using GDB your Yocto image must meet some requirements:
+
+### OpenSSH
+Since Visual Studio connects via SSH to the debug target you must include *OpenSSH* into your Yocto image. 
+
+Please make sure that you configure your SFTP subsystem using *internal-sftp*. Otherwise Visual Studio will not be able to connect.
+
+### GDB
+To be able to debug you need to add `tools-debug` to your `EXTRA_IMAGE_FEATURES`.
