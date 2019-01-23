@@ -1,12 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 
-  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ValidateValidArchitecture" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
-  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.WriteRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
-  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteDir" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.Execute" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
-  <UsingTask TaskName="Microsoft.Build.Linux.Tasks.RemoteClean" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
 
   <UsingTask TaskName="MingCompile" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
   <UsingTask TaskName="YoctoMingLink" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
@@ -58,13 +54,7 @@
   </PropertyGroup>
 
   <!-- Remote Stuff -->
-  <Target Name="_WriteRemoteTarget" DependsOnTargets="_ResolveRemoteTarget">
-    <WriteRemoteTarget
-      RemoteTarget="$(ResolvedRemoteTarget)"
-      LastRemoteTargetFile="$(LastRemoteTargetFile)"/>
-  </Target>
-
-  <Target Name="_ResolveRemoteTarget">
+   <Target Name="_ResolveRemoteTarget">
     <ResolveRemoteTarget 
       RemoteTarget="$(RemoteTarget)"
       DesignTimeBuild="true">
@@ -73,26 +63,6 @@
       <Output TaskParameter="RemoteTargetArchitecture" PropertyName="RemoteTargetArchitecture"/>
       <Output TaskParameter="ResolvedRemoteUserName" PropertyName="ResolvedRemoteUserName"/>
     </ResolveRemoteTarget>
-  </Target>
-
-  <Target Name="ResolveRemoteDir" DependsOnTargets="_PrepareUpToDateChecks">
-    <ResolveRemoteDir
-      RemoteProjectDir="$(RemoteProjectDir)"
-      RemoteTarget="$(ResolvedRemoteTarget)"
-      ProjectDir="$(ProjectDir)"
-      IntermediateDir="$(IntDir)"
-      RemoteProjectDirFile="$(RemoteProjectDirFile)">
-      <Output TaskParameter="ResolvedRemoteProjectDir" PropertyName="_ResolvedRemoteProjectDir"/>
-    </ResolveRemoteDir>
-  </Target>
-
-  <Target Name="_ValidateValidArchitecture" Condition="'$(ValidateArchitecture)' != 'False'" DependsOnTargets="_ResolveRemoteTarget">
-    <ValidateValidArchitecture
-      Platform="$(Platform)"
-      RemoteTarget="$(ResolvedRemoteTarget)" 
-      ProjectDir="$(ProjectDir)"
-      RemoteProjectDir="$(RemoteProjectDir)"
-      IntermediateDir="$(IntDir)"/>
   </Target>
 
   <Target Name="FixupCLCompileOptions"
