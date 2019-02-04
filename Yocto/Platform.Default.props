@@ -19,7 +19,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <!--Define platform properties-->
     <DefaultPlatformToolset></DefaultPlatformToolset>
 		
-    <ConfigurationType>Application</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
 

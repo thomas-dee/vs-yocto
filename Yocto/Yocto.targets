@@ -4,9 +4,9 @@
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.ResolveRemoteTarget" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
   <UsingTask TaskName="Microsoft.Build.Linux.Tasks.Execute" AssemblyFile="$(LinuxCommonTargetsPath)Microsoft.Build.Linux.Tasks.dll"/>
 
-  <UsingTask TaskName="MingCompile" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
-  <UsingTask TaskName="YoctoMingLink" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
-  <UsingTask TaskName="Archive" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="YoctoCompile" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="YoctoLink" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
+  <UsingTask TaskName="YoctoArchive" AssemblyFile="$(LinuxCommonTargetsPath)vs-yocto.Build.CPPTasks.GCC.dll"/>
 
   <!--<UsingTask TaskName="SetEnv" AssemblyFile="$(VCTargetsPath)Microsoft.Build.CppTasks.Common.dll"/>-->
 
@@ -48,9 +48,6 @@
       $(ComputeCompileInputsTargets);
       FixupCLCompileOptions;
     </ComputeCompileInputsTargets>
-
-    <RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteOutDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>
-    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(RemoteTargetPath)</RemoteDebuggerCommand>
   </PropertyGroup>
 
   <!-- Remote Stuff -->
@@ -119,11 +116,9 @@
     <Message Condition="'$(_DebugMessages)' == 'true'" Importance="high" Text="ClCompile.PrecompiledHeaderOutputFile = '%(ClCompile.PrecompiledHeaderOutputFile)'"/>
 
     <!-- Precompiled headers - need to build them first -->
-    <MingCompile Condition="'%(ClCompile.PrecompiledHeaderFile)' != '' and '%(ClCompile.ExcludedFromBuild)' != 'true'"
+    <YoctoCompile Condition="'%(ClCompile.PrecompiledHeaderFile)' != '' and '%(ClCompile.ExcludedFromBuild)' != 'true'"
                   BuildingInIDE = "$(BuildingInsideVisualStudio)"
-                  GNUMode="$(GNUMode)"
-                  MSVCErrorReport="$(MSVCErrorReport)"
-
+                  GNUMode="true"
                   Sources="%(ClCompile.PrecompiledHeaderFile)"
                   AdditionalIncludeDirectories="%(ClCompile.AdditionalIncludeDirectories)"
                   AdditionalOptions="%(ClCompile.AdditionalOptions)"
@@ -173,13 +168,11 @@
                   TrackerSdkPath="$(CLTrackerSdkPath)"
                   EnableExecuteTool="$(ClangEnableExecuteTool)"
     >
-    </MingCompile>
+    </YoctoCompile>
 
-    <MingCompile Condition="'%(ClCompile.ExcludedFromBuild)' != 'true'"
+    <YoctoCompile Condition="'%(ClCompile.ExcludedFromBuild)' != 'true'"
                   BuildingInIDE = "$(BuildingInsideVisualStudio)"
-                  GNUMode="$(GNUMode)"
-                  MSVCErrorReport="$(MSVCErrorReport)"
-
+                  GNUMode="true"
                   Sources="@(ClCompile)"
 									AdditionalIncludeDirectories="%(ClCompile.AdditionalIncludeDirectories)"
                   AdditionalOptions="%(ClCompile.AdditionalOptions)"
@@ -229,7 +222,7 @@
                   TrackerSdkPath="$(CLTrackerSdkPath)"
                   EnableExecuteTool="$(ClangEnableExecuteTool)"
     >
-    </MingCompile>
+    </YoctoCompile>
   </Target>
 
   <!-- *******************************************************************************************
@@ -250,12 +243,10 @@
       <LinkOutputFile Condition="'$(LinkOutputFile)' == ''">$(IntDir)$(TargetName)$(TargetExt)</LinkOutputFile>
     </PropertyGroup>
 		
-		<Message Text="Linking: @(Link)"/>
-
-    <YoctoMingLink BuildingInIDE = "$(BuildingInsideVisualStudio)"
-               GNUMode="$(GNUMode)"
-               MSVCErrorReport="$(MSVCErrorReport)"
-
+		<Message Text="Linking: @(Link) ($(ConfigurationType))"/>
+ 
+    <YoctoLink BuildingInIDE = "$(BuildingInsideVisualStudio)"
+               GNUMode="true"
                Sources="@(Link)"
                AdditionalLibraryDirectories="%(Link.AdditionalLibraryDirectories)"
                AdditionalOptions="%(Link.AdditionalOptions)"
@@ -269,17 +260,17 @@
                OptimizeForMemory="%(Link.OptimizeForMemory)"
                OutputFile="$(LinkOutputFile)"
                SharedLibrarySearchPath="%(Link.SharedLibrarySearchPath)"
+               SharedLibraryRuntimeSearchPath="./;%(Link.SharedLibraryRuntimeSearchPath)"
                ShowProgress="%(Link.ShowProgress)"
                Sysroot="$(Sysroot)"
-							 Subsystem="%(Link.Subsystem)"
+							 Subsystem="$(ConfigurationType)"
                Target="$(ClangTarget)"
 							 ThreadSupport="%(Link.ThreadSupport)"
                UnresolvedSymbolReferences="%(Link.UnresolvedSymbolReferences)"
 							 UnicodeBuild="%(Link.UnicodeBuild)"
                Version="%(Link.Version)"
                VerboseOutput="%(Link.VerboseOutput)"
-							 Win32Build="%(Link.Win32Build)"
-
+							 
                MinimalRebuildFromTracking="%(Link.MinimalRebuildFromTracking)"
                TrackFileAccess="$(TrackFileAccess)"
                TrackerLogDirectory="$(TLogLocation)"
@@ -293,7 +284,7 @@
                EnableExecuteTool="$(ClangEnableExecuteTool)"
     >
       <Output TaskParameter="SkippedExecution" PropertyName="LinkSkippedExecution" />
-    </YoctoMingLink>
+    </YoctoLink>
 
     <!-- *******************************************************************************************
           Strip Symbols
@@ -329,7 +320,7 @@
       </Lib>
     </ItemGroup>
 		
-    <Archive Sources="@(Lib)"
+    <YoctoArchive Sources="@(Lib)"
              AdditionalLibraryDirectories="%(Lib.AdditionalLibraryDirectories)"
              AdditionalOptions="%(Lib.AdditionalOptions)"
              AdditionalDependencies="%(Lib.AdditionalDependencies)"
@@ -355,16 +346,18 @@
 
              EnableExecuteTool="$(LibEnableExecuteTool)"
     >
-    </Archive>
+    </YoctoArchive>
 
     <Message Text="$(MSBuildProjectFile) -&gt; %(Lib.OutputFile)" Importance="High" />
   </Target>
 	
-  <Target Name="_CopyBinaryToRemote" Condition="'$(RemoteTargetPath)' != '' and '$(LinkSkippedExecution)' != 'true'" DependsOnTargets="_ResolveRemoteTarget">
+  <Target Name="_CopyBinaryToRemote" Condition="'$(LinkSkippedExecution)' != 'true'" DependsOnTargets="_ResolveRemoteTarget">
     <PropertyGroup>
-      <FixedRemoteTargetPath>$([System.String]::Copy('$(RemoteTargetPath)').Replace('~/','/home/$(ResolvedRemoteUserName)/'))</FixedRemoteTargetPath>
+      <FixedRemoteTargetPath>$([System.String]::Copy('$(RemoteProjectDir)/$(TargetName)$(TargetExt)').Replace('~/','/home/$(ResolvedRemoteUserName)/'))</FixedRemoteTargetPath>
       <FixedRemoteProjectDir>$([System.String]::Copy('$(RemoteProjectDir)').Replace('~/','/home/$(ResolvedRemoteUserName)/'))</FixedRemoteProjectDir>
     </PropertyGroup>
+    <!--<Message Text="$(RemoteProjectDir)/$(TargetName)$(TargetExt) -&gt; $(FixedRemoteTargetPath)" Importance="High" />
+    <Message Text="$(RemoteProjectDir) -&gt; $(FixedRemoteProjectDir)" Importance="High" />-->
     <Execute Condition="'$(ResolvedRemoteTarget)' != ''"
       RemoteTarget="$(ResolvedRemoteTarget)"
       ProjectDir="$(ProjectDir)"
@@ -373,7 +366,7 @@
       LocalFilesToCopyRemotelyMapping="$(OutDir)$(TargetName)$(TargetExt):=$(FixedRemoteTargetPath)"
       Timeout="$(RemoteExecuteTimeout)">
     </Execute>
-    <Execute Condition="'$(ResolvedRemoteTarget)' != ''"
+    <Execute Condition="'$(ResolvedRemoteTarget)' != '' and '$(ConfigurationType)' == 'Application'"
       RemoteTarget="$(ResolvedRemoteTarget)"
       ProjectDir="$(ProjectDir)"
       RemoteProjectDir="$(FixedRemoteProjectDir)"
@@ -438,6 +431,9 @@
       _CopyBinaryToRemote;
       _MarkLastSuccessfulDeployForCleanup;
     </BuildLinkTargets>
+  
+    <RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>
+    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(RemoteTargetPath)</RemoteDebuggerCommand>
   </PropertyGroup>
 
   <!-- *******************************************************************************************
@@ -483,7 +479,7 @@
     <PostBuildEvent Include="$(ProjectName)" />
 
     <!-- Enable Link tool for Apps and DLLs -->
-    <ProjectTools Condition="('$(ConfigurationType)' == 'Application' or '$(ConfigurationType)' == 'DynamicLibrary')" Include="Link" />
+    <ProjectTools Condition="('$(ConfigurationType)' == 'Application' or '$(ConfigurationType)' == 'SharedLibrary')" Include="Link" />
 		<!-- Enable Librarian tool for static libs -->
     <ProjectTools Condition="'$(ConfigurationType)' == 'StaticLibrary'" Include="Lib" />
     <ProjectTools Include="CustomBuildStep" />

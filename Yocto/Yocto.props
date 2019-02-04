@@ -43,7 +43,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <IntDir Condition="'$(IntDir)'=='' AND '$(IntermediateOutputPath)'!=''">$(IntermediateOutputPath)</IntDir>
     <IntDir Condition="'$(IntDir)'=='' AND '$(IntermediateOutputPath)'==''">$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' == ''">$(IntDir)</OutDir>
-    <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' != ''">$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' != '' AND '$(ConfigurationType)' != 'StaticLibrary'">$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(OutDir)'=='' AND '$(ProjectDir)' != '' AND '$(ConfigurationType)' == 'StaticLibrary'">$(ProjectDir)lib\$(Platform)\$(Configuration)\</OutDir>
 
     <LastRemoteTargetFile>$(IntDir)LastRemoteTarget.tlog</LastRemoteTargetFile>
 
@@ -58,12 +59,9 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
   <!-- Provide default values if necessary -->
   <PropertyGroup>
-    <RemoteProjectDir Condition="'$(RemoteProjectDir)' == ''">$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
-    <RemoteOutDir Condition="'$(RemoteOutDir)' == ''">$(RemoteProjectDir)/bin/$(Platform)/$(Configuration)</RemoteOutDir>
-
+    <ProjectName Condition="'$(ProjectName)' == ''">$(MSBuildProjectName)</ProjectName>
     <TargetRuntime>Native</TargetRuntime>
     <TargetExt />
-    <ProjectName Condition="'$(ProjectName)' == ''">$(MSBuildProjectName)</ProjectName>
 
     <ExtensionsToDeleteOnClean Condition="'$(ExtensionsToDeleteOnClean)' == ''">*.d;*.tlog;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
     <PreBuildEventUseInBuild Condition="'$(PreBuildEventUseInBuild)' == ''">false</PreBuildEventUseInBuild>
@@ -88,6 +86,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <ValidateArchitecture Condition="'$(ValidateArchitecture)' == ''">false</ValidateArchitecture>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RemoteProjectDir Condition="'$(RemoteProjectDir)' == ''">$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
+    <RemoteOutDir Condition="'$(RemoteOutDir)' == ''">$(RemoteProjectDir)</RemoteOutDir>
+  </PropertyGroup>
+
   <ItemGroup>
     <SourcesToCopyRemotely Include="@(ClCompile);@(ClInclude);@(None);" />
     <DataFilesToCopyRemotely Include="@(Xsd);@(Resource);@(Object);@(Library);@(FxCompile);@(Image);@(Media);@(Xml);@(Text);@(Font)" />
@@ -108,28 +111,28 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   </PropertyGroup>
 	
   <!-- ConfigurationType Specific values -->
-  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'SharedLibrary'">
     <!-- $(GenerateImportLib) should be set to true when you want to generate the import library as part of the BuildCompile pass rather than wait
          until the BuildLink pass for Linker to generate it. This allows circular dependencies between dlls to be satisfied when building using passes -->
     <ImpLibCompiled Condition="'$(GenerateImportLib)'=='true'">true</ImpLibCompiled>
-    <LinkCompiled>true</LinkCompiled>
+    <TargetName>lib$(ProjectName)</TargetName>
     <TargetExt>.so</TargetExt>
+    <LinkCompiled>true</LinkCompiled>
     <OutputType>library</OutputType>
   </PropertyGroup>
 
    <PropertyGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
     <LibCompiled>true</LibCompiled>
     <TargetExt>.a</TargetExt>
-    <TargetName Condition="'$(TargetName)' == ''">lib$(ProjectName)</TargetName>
+    <TargetName>lib$(ProjectName)</TargetName>
     <OutputType>staticlibrary</OutputType>
   </PropertyGroup>
 
   <PropertyGroup>
     <RemoteDebuggingMode Condition="'$(RemoteDebuggingMode)' == ''">gdb</RemoteDebuggingMode>
-    <RemoteDebuggerWorkingDirectory>$(RemoteOutDir)</RemoteDebuggerWorkingDirectory>
-    <RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteOutDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>
-    <RemoteDebuggerCommand>$(RemoteTargetPath)</RemoteDebuggerCommand>
     <EnablePrettyPrinting Condition="'$(EnablePrettyPrinting)' == ''">true</EnablePrettyPrinting>
+    <RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>
+    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt) </RemoteDebuggerCommand>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -235,9 +238,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       <LibraryDependencies></LibraryDependencies>
       <PackageDebugSymbols Condition="'$(UseDebugLibraries)' == 'true'">true</PackageDebugSymbols>
       <PackageDebugSymbols Condition="'$(UseDebugLibraries)' != 'true'">false</PackageDebugSymbols>
-	  <Subsystem Condition="'$(ConfigurationType)' == 'Application'">Application</Subsystem>
-      <Subsystem Condition="'$(ConfigurationType)' == 'SharedLibrary'">SharedLibrary</Subsystem>
-	  <ThreadSupport>true</ThreadSupport>
+	    <ThreadSupport Condition="'$(ThreadSupport)' == ''">true</ThreadSupport>
+	    <OpenMPSupport Condition="'$(OpenMPSupport)' == '' and '$(ThreadSupport)' == 'true'">true</OpenMPSupport>
    </Link>
 
   <!-- *******************************************************************************************

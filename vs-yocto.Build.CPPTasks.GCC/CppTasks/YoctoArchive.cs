@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Microsoft.Build.CPPTasks
 {
-  public class Archive : TrackedVCToolTask
+  public class YoctoArchive : TrackedVCToolTask
   {
     private ITaskItem[] preprocessOutput = new ITaskItem[0];
     private ArrayList switchOrderList;
@@ -465,7 +465,7 @@ namespace Microsoft.Build.CPPTasks
       }
     }
 
-    public Archive()
+    public YoctoArchive()
       : base(new ResourceManager("Microsoft.Build.CPPTasks.Strings", Assembly.GetExecutingAssembly()))
     {
       this.switchOrderList = new ArrayList();

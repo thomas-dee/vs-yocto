@@ -21,7 +21,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <_ApplicableDebuggers>Desktop</_ApplicableDebuggers>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
     <DesktopDebuggerPages Include="$(_PlatformFolder)\$(LangID)\remote_debugger_linux.xml" />
   </ItemGroup>
 

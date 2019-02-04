@@ -16,13 +16,9 @@
     <DataSource Persistence="ProjectFile" ItemType="ClCompile" Label="" HasConfigurationCondition="true" />
   </Rule.DataSource>
   <!--Generate page-->
-  <BoolProperty Name="MSVCErrorReport" DisplayName="Visual Studio Errors Reporting" Description="Report errors that Visual Studio can parse for file and line information." Category="General" Switch="fdiagnostics-format=msvc" Visible="false" F1Keyword="">
-  </BoolProperty>
-  <StringProperty Name="GccToolChain" DisplayName="Gcc Tool Chain" Description="Folder path to Gcc Tool Chain." Category="General" Switch="gcc-toolchain " Visible="false" F1Keyword="">
-  </StringProperty>
   <StringProperty Name="Target" DisplayName="Target" Description="Target" Category="General" Switch="target " Visible="false" F1Keyword="">
   </StringProperty>
-  <StringProperty Name="Sysroot" DisplayName="Sysroot" Description="Folder path to the root directory for headers and libraries." Category="General" Switch="-sysroot=" Visible="true" F1Keyword="">
+  <StringProperty Name="Sysroot" DisplayName="Sysroot" Description="Folder path to the root directory for headers and libraries." Category="General" Switch="-sysroot=" Visible="False" F1Keyword="">
   </StringProperty>
   <StringListProperty Subtype="folder" Name="AdditionalIncludeDirectories" DisplayName="Additional Include Directories" Description="Specifies one or more directories to add to the include path; separate with semi-colons if more than one. (-I[path])." Category="General" Switch="I " F1Keyword="VC.Project.VCClangCompilerTool.AdditionalIncludeDirectories">
   </StringListProperty>

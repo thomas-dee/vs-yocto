@@ -10,11 +10,6 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns="http://schemas.microsoft.com/build/2009/properties">
 
-  <Rule.Categories>
-    <Category Name="General" DisplayName="General" Description="General" />
-    <Category Name="TargetSettings" DisplayName="Target Settings" Description="Target Settings" />
-  </Rule.Categories>
-
   <Rule.Metadata>
     <sys:Guid x:Key="DebugTargetTypeCommandGuid">FEEA6E9D-77D8-423F-9EDE-3970CBB76125</sys:Guid>
     <sys:UInt32 x:Key="DebugTargetTypeCommandId">0x400</sys:UInt32>
@@ -30,32 +25,6 @@
               EnumProvider="RemoteDebugTargets"
               Visible="false" Category="TargetSettings">
   </DynamicEnumProperty>
-  <DynamicEnumProperty Name="RemoteTarget" DisplayName="Remote Debugging Machine"
-                  Description="The target machine or device to use for remote build, deploy and debug."
-                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Default="" EnumProvider="RemoteTargets" Category="TargetSettings">
-    <DynamicEnumProperty.DataSource>
-      <DataSource Persistence="UserFile" Label="" />
-    </DynamicEnumProperty.DataSource>
-  </DynamicEnumProperty>
-  <StringProperty Name="RemoteRootDir" DisplayName="Remote Debugging Root Directory"
-                  Description="Specifies a path to a directory on the remote machine or device."
-                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Default="~/projects" Category="TargetSettings">
-    <StringProperty.DataSource>
-      <DataSource Persistence="ProjectFile" Label="Configuration" />
-    </StringProperty.DataSource>
-  </StringProperty>
-  <StringProperty Name="RemoteProjectDir" DisplayName="Remote Debugging Project Directory"
-                  Description="Specifies a path to a directory on the remote machine or device for the project."
-                  F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Default="" Category="TargetSettings">
-    <StringProperty.DataSource>
-      <DataSource Persistence="ProjectFile" Label="" />
-    </StringProperty.DataSource>
-  </StringProperty>
-
-
   <EnumProperty Name="DebuggerType" 
                 DisplayName="Debugger Type" 
                 F1Keyword="VC.Project.RaspberryDebugger.DebuggerType"
@@ -72,7 +41,7 @@
 
   <StringProperty Name="RemoteDebuggerCommand" DisplayName="Program"
                   Description="The full path to the program to debug on the remote system. This is a path on the remote system. If left empty or unchanged it defaults to the current project output."
-                  F1Keyword="VC.Project.IVCLocalDebugPageObject.CommandArguments" Category="General">
+                  F1Keyword="VC.Project.IVCLocalDebugPageObject.CommandArguments" Category="General" Default="">
   </StringProperty>
   <StringProperty Name="RemoteDebuggerCommandArguments" DisplayName="Program Arguments"
                   Description="The command line arguments to pass to the program being debugged."
@@ -120,8 +89,8 @@
   <StringProperty Name="GDBPath" Visible="false"  Category="General"/>
   <StringProperty Name="GdbShellExecProgram" Visible="false"  Category="General"/>
   <StringProperty Name="GdbShellExecProgramFlags" Visible="false"  Category="General"/>
-  <StringProperty Name="RemoteTargetPath" Visible="true"  Category="General"/>
-
+  <StringProperty Name="RemoteTargetPath" Visible="false" Category="General" Default=""/>
+  
   <BoolProperty Name="EnablePrettyPrinting" DisplayName="Enable Python Pretty Printing" Description="Enable pretty printing of expression values. Only supported in &quot;gdb&quot; debugging mode." Visible="true" F1Keyword="VC.Project.RaspberryDebugger.EnablePrettyPrinting" Category="General">
   </BoolProperty>
 

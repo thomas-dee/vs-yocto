@@ -9,6 +9,7 @@
   <Rule.Categories>
     <Category Name="General" DisplayName="General" Description="General" />
     <Category Name="ProjectDefaults" DisplayName="Project Defaults" Description="Project Defaults" />
+    <Category Name="RemoteDebugging" DisplayName="Remote Debugging" Description="Remote Debugging" />
   </Rule.Categories>
   <Rule.DataSource>
     <DataSource Persistence="ProjectFile" Label="Configuration" />
@@ -71,26 +72,26 @@
                        Description="Specifies the toolset used for building the current configuration; If not set, the default toolset is used"
                        F1Keyword="VC.Project.VCConfiguration.PlatformToolset"
                        Category="General" />
-  <DynamicEnumProperty Name="RemoteTarget" DisplayName="Remote Build Machine"
-                  Description="The target machine or device to use for remote build, deploy and debug."
+  <DynamicEnumProperty Name="RemoteTarget" DisplayName="Machine"
+                  Description="The target machine or device to use for remote deploy and debug."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="" EnumProvider="RemoteTargets" Visible="false">
+                  Category="RemoteDebugging" Default="" EnumProvider="RemoteTargets" Visible="true">
     <DynamicEnumProperty.DataSource>
       <DataSource Persistence="UserFile" Label="" />
     </DynamicEnumProperty.DataSource>
   </DynamicEnumProperty>
-  <StringProperty Name="RemoteRootDir" DisplayName="Remote Build Root Directory"
+  <StringProperty Name="RemoteRootDir" DisplayName="Root Directory"
                   Description="Specifies a path to a directory on the remote machine or device."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="" Visible="false">
+                  Category="RemoteDebugging" Default="" Visible="true">
     <StringProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="Configuration" />
     </StringProperty.DataSource>
   </StringProperty>
-  <StringProperty Name="RemoteProjectDir" DisplayName="Remote Build Project Directory"
-                  Description="Specifies a path to a directory on the remote machine or device for the project."
+  <StringProperty Name="RemoteProjectDir" DisplayName="Target Directory"
+                  Description="Specifies a path to a directory on the remote machine where the binary will be uploaded to."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
-                  Category="General" Default="" Visible="false">
+                  Category="RemoteDebugging" Visible="true">
     <StringProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="" />
     </StringProperty.DataSource>
@@ -100,8 +101,8 @@
                 Description="Specifies the type of output this configuration generates."
                 Category="ProjectDefaults"
                 F1Keyword="VC.Project.VCConfiguration.ConfigurationType">
-    <EnumValue Name="DynamicLibrary" DisplayName="Dynamic Library (.so)" Description="Dynamic Library (.so)"/>
-    <EnumValue Name="StaticLibrary" DisplayName="Static library (.a)" Description="Static Library (.a)" />
+    <EnumValue Name="SharedLibrary" DisplayName="Shared Library (.so)" Description="Shared Library (.so)"/>
+    <EnumValue Name="StaticLibrary" DisplayName="Static Library (.a)" Description="Static Library (.a)" />
     <EnumValue Name="Application" DisplayName="Application (.out)" Description="Application (.out)" />
   </EnumProperty>
 
