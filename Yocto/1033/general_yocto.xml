@@ -88,7 +88,7 @@
       <DataSource Persistence="ProjectFile" Label="Configuration" />
     </StringProperty.DataSource>
   </StringProperty>
-  <StringProperty Name="RemoteProjectDir" DisplayName="Target Directory"
+  <StringProperty Name="RemoteProjectDir" DisplayName="Remote Project Directory"
                   Description="Specifies a path to a directory on the remote machine where the binary will be uploaded to."
                   F1Keyword="VC.Project.VCConfiguration.BuildLogFile"
                   Category="RemoteDebugging" Visible="true">

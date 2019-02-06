@@ -229,7 +229,6 @@
         Link
        ******************************************************************************************* -->
 
-
   <Target Name="Link" Condition="'@(Link)' != ''">
 
     <ItemGroup>
@@ -243,19 +242,40 @@
       <LinkOutputFile Condition="'$(LinkOutputFile)' == ''">$(IntDir)$(TargetName)$(TargetExt)</LinkOutputFile>
     </PropertyGroup>
 		
+    <!-- gather referenced projects libs -->
+    <MSBuild Projects="%(ProjectReference.Identity)" Targets="GetTargetPath" Properties="Configuration=$(Configuration)">
+        <Output TaskParameter="TargetOutputs" ItemName="LinkedLibraryPathItems" />
+    </MSBuild>
+
+    <ItemGroup>
+      <ReferencedLibraries Condition="'@(ProjectReference)' != ''" Include="@(ProjectReference)">
+        <ProjectName Condition="'%(LinkLibraryDependencies)' != 'false'">$([System.IO.Path]::GetFileNameWithoutExtension('%(Identity)'))</ProjectName>
+      </ReferencedLibraries> 
+    </ItemGroup>
+
+    <ItemGroup>
+      <LinkedLibraryFolders Condition="'@(LinkedLibraryPathItems)' != ''" Include="@(LinkedLibraryPathItems)">
+        <LibraryFolder>$([System.IO.Path]::GetDirectoryName('%(Identity)'))</LibraryFolder>
+      </LinkedLibraryFolders> 
+    </ItemGroup>
+
+    <PropertyGroup>
+      <LinkedLibraries>@(ReferencedLibraries->'%(ProjectName)', ';')</LinkedLibraries>
+      <LinkedLibraryFolders>@(LinkedLibraryFolders->'%(LibraryFolder)', ';')</LinkedLibraryFolders>
+    </PropertyGroup>
+
 		<Message Text="Linking: @(Link) ($(ConfigurationType))"/>
- 
     <YoctoLink BuildingInIDE = "$(BuildingInsideVisualStudio)"
                GNUMode="true"
                Sources="@(Link)"
-               AdditionalLibraryDirectories="%(Link.AdditionalLibraryDirectories)"
+               AdditionalLibraryDirectories="$(LinkedLibraryFolders);%(Link.AdditionalLibraryDirectories)"
                AdditionalOptions="%(Link.AdditionalOptions)"
                AdditionalDependencies="%(Link.AdditionalDependencies)"
                ForceSymbolReferences="%(Link.ForceSymbolReferences)"
                GenerateMapFile="%(Link.GenerateMapFile)"
                IncrementalLink="%(Link.IncrementalLink)"
                IgnoreSpecificDefaultLibraries="%(Link.IgnoreSpecificDefaultLibraries)"
-               LibraryDependencies="%(Link.LibraryDependencies)"
+               LibraryDependencies="$(LinkedLibraries);%(Link.LibraryDependencies)"
                DebuggerSymbolInformation="%(Link.DebuggerSymbolInformation)"
                OptimizeForMemory="%(Link.OptimizeForMemory)"
                OutputFile="$(LinkOutputFile)"
@@ -306,8 +326,6 @@
   <!-- *******************************************************************************************
         Lib
        ******************************************************************************************* -->
-
-
   <Target Name="Lib" Condition="'@(Lib)' != ''" >
 
     <PropertyGroup>      
@@ -419,6 +437,16 @@
   </Target>
 
   <PropertyGroup>
+    <RemoteProjectDir Condition="'$(RemoteProjectDir)' == ''">$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
+    <RemoteDebuggerWorkingDirectory Condition="'$(RemoteDebuggerWorkingDirectory)' == ''">$(RemoteProjectDir)</RemoteDebuggerWorkingDirectory>
+    <!--<RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>-->
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt)</RemoteDebuggerCommand>
+  </PropertyGroup>
+
+  <PropertyGroup>
 		<BeforeBuildCompileTargets>
       $(BeforeBuildCompileTargets);
     </BeforeBuildCompileTargets>
@@ -431,9 +459,6 @@
       _CopyBinaryToRemote;
       _MarkLastSuccessfulDeployForCleanup;
     </BuildLinkTargets>
-  
-    <RemoteTargetPath Condition="'$(RemoteTargetPath)' == ''">$(RemoteProjectDir)/$(TargetName)$(TargetExt)</RemoteTargetPath>
-    <RemoteDebuggerCommand Condition="'$(RemoteDebuggerCommand)' == ''">$(RemoteTargetPath)</RemoteDebuggerCommand>
   </PropertyGroup>
 
   <!-- *******************************************************************************************

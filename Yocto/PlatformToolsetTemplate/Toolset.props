@@ -28,26 +28,15 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <Sysroot>$(YoctoSDKRoot)\sysroots\$(YoctoSDKPlatformTriplet)</Sysroot>
     <YoctoSDKToolchainFolder>$(Sysroot)\..\$(YoctoSDKMinGW)\usr\bin\$(YoctoSDKPlatformTriplet)</YoctoSDKToolchainFolder>
     <SystemIncludeDirectories>$(IncludePath);$(StdIncludeFolder);$(Sysroot)\usr\include;$(Sysroot);$(Sysroot)\usr\include\c++\$(YoctoSDKGCCVersion);$(Sysroot)\usr\include\c++\$(YoctoSDKGCCVersion)\$(YoctoSDKPlatformTriplet);$(Sysroot)\..\$(YoctoSDKMinGW)\usr\lib\$(YoctoSDKPlatformTriplet)\gcc\$(YoctoSDKPlatformTriplet)\$(YoctoSDKGCCVersion)\include</SystemIncludeDirectories>
-    <CopyToTarget Condition="'$(LoadLinuxNative)' == 'true' and '$(CopyToTarget)' == ''">true</CopyToTarget>
-    <CopyToTarget Condition="'$(LoadLinuxNative)' != 'true' and '$(CopyToTarget)' == ''">false</CopyToTarget>    
   </PropertyGroup>
 
   <PropertyGroup>
     <ToolExe>g++</ToolExe>
     <GDBRoot>$(YoctoSDKToolchainFolder)</GDBRoot>
-    <RemoteCCompileToolExe Condition="'$(RemoteCCompileToolExe)' == ''">g++</RemoteCCompileToolExe>
-    <RemoteCppCompileToolExe Condition="'$(RemoteCppCompileToolExe)' == ''">g++</RemoteCppCompileToolExe>
-    <RemoteLdToolExe Condition="'$(RemoteLdToolExe)' == ''">g++</RemoteLdToolExe>
-    <RemoteArToolExe Condition="'$(RemoteArToolExe)' == ''">ar</RemoteArToolExe>
     <RemoteGdbserverToolExe Condition="'$(RemoteGdbserverToolExe)' == ''">gdbserver</RemoteGdbserverToolExe>
     <RemoteGdbToolExe Condition="'$(RemoteGdbToolExe)' == ''">gdb</RemoteGdbToolExe>
     <!-- Set $(ExecutablePath) used by Microsoft.Cpp.CurrentVersion.targets's SetBuildDefaultEnvironmentVariables target to set the PATH env var -->
     <ExecutablePath>$(Path)</ExecutablePath>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <RemoteProjectDir Condition="'$(RemoteProjectDir)' == ''">$(RemoteRootDir)/$(ProjectName)</RemoteProjectDir>
-    <RemoteDebuggerWorkingDirectory>$(RemoteProjectDir)</RemoteDebuggerWorkingDirectory>
   </PropertyGroup>
   
   <ItemDefinitionGroup> 
